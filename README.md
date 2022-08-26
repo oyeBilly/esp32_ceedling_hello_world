@@ -1,20 +1,58 @@
-| Supported Targets | ESP32 | ESP32-C2 | ESP32-C3 | ESP32-S2 | ESP32-S3 |
-| ----------------- | ----- | -------- | -------- | -------- | -------- |
+# Hey Ceedling Example
 
-# Hello World Example
+Modified the esp-idf "hello world" example to demonstrate unit testing esp32 projects on a host machine using ceedling to build and run unit tests. Target builds for the esp32 are done separately with the ESP-IDF toolchain.
 
-Starts a FreeRTOS task to print "Hello World".
-
-(See the README.md file in the upper level 'examples' directory for more information about examples.)
+## Pre Reqs
+1. ESP-IDF (https://github.com/espressif/esp-idf)
+2. Throw The Switch's docker image: `docker pull throwtheswitch/madsciencelab`
 
 ## How to use example
 
-Follow detailed instructions provided specifically for this example. 
+1. Open your test environment: `docker run -it --rm -v $PWD:/project throwtheswitch/madsciencelab`
+2. test the edge component (no dependency on esp-idf): `ceedling test:hey_ceedling`
+You should get similar results:
+~~~
+Test 'test_hey_ceedling.c'
+--------------------------
+Compiling hey_ceedling.c...
+Linking test_hey_ceedling.out...
+Running test_hey_ceedling.out...
 
-Select the instructions depending on Espressif chip installed on your development board:
+-----------
+TEST OUTPUT
+-----------
+[test_hey_ceedling.c]
+  - "hey ceedling"
 
-- [ESP32 Getting Started Guide](https://docs.espressif.com/projects/esp-idf/en/stable/get-started/index.html)
-- [ESP32-S2 Getting Started Guide](https://docs.espressif.com/projects/esp-idf/en/latest/esp32s2/get-started/index.html)
+--------------------
+OVERALL TEST SUMMARY
+--------------------
+TESTED:  1
+PASSED:  1
+FAILED:  0
+IGNORED: 0
+~~~
+
+3. Test the main function: `ceedling test`
+~~~
+Test 'test_hey_ceedling.c'
+--------------------------
+Running test_hey_ceedling.out...
+
+
+Test 'test_hello_world_main.c'
+------------------------------
+Compiling hello_world_main.c...
+In file included from /esp/freertos/FreeRTOS-Kernel/include/freertos/FreeRTOS.h:79,
+                 from main/hello_world_main.c:9:
+/esp/newlib/platform_include/sys/reent.h:9:14: fatal error: sys/reent.h: No such file or directory
+    9 | #include_next<sys/reent.h>
+      |              ^~~~~~~~~~~~~
+compilation terminated.
+ERROR: Shell command failed.
+~~~
+
+*NOTICE in project.yml include section* that the file is explicitly included! On windows running wsl I get an error the arg is too big, I wonder if it is truncated on mac and that's why it appears missing?
 
 
 ## Example folder contents
@@ -45,9 +83,4 @@ For more information on structure and contents of ESP-IDF projects, please refer
 
 ## Technical support and feedback
 
-Please use the following feedback channels:
-
-* For technical queries, go to the [esp32.com](https://esp32.com/) forum
-* For a feature request or bug report, create a [GitHub issue](https://github.com/espressif/esp-idf/issues)
-
-We will get back to you as soon as possible.
+n/a
