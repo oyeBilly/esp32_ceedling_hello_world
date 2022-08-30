@@ -67,9 +67,11 @@
   # copied from example https://github.com/ThrowTheSwitch/Ceedling/issues/579#issuecomment-1229347565
   :verbosity: 3
   :includes_h_pre_orig_header:
+    - portmacro.h
     - FreeRTOSConfig_arch.h #just a guess to put this first
     - FreeRTOS.h
   :includes:
+    - portmacro.h
     - FreeRTOSConfig_arch.h #just a guess to put this first
     - FreeRTOS.h
   :strippables:
@@ -134,6 +136,7 @@
     - "-D$": COLLECTION_DEFINES_TEST_AND_VENDOR
     - "-D$": DEFINES_TEST_PREPROCESS
     - "-DGNU_COMPILER"
+    - "-include portmacro.h"
     - "-includeFreeRTOSConfig_arch.h" #just a guess to put this first
     - "-include FreeRTOS.h"
     - '"${1}"'
@@ -151,6 +154,7 @@
     - "-D$": COLLECTION_DEFINES_TEST_AND_VENDOR
     - "-D$": DEFINES_TEST_PREPROCESS
     - "-DGNU_COMPILER"
+    - "-include portmacro.h"
     - "-includeFreeRTOSConfig_arch.h" #just a guess to put this first
     - "-include FreeRTOS.h"
     - "-fdirectives-only"
@@ -173,6 +177,7 @@
     - "-D$": COLLECTION_DEFINES_TEST_AND_VENDOR
     - "-D$": DEFINES_TEST_PREPROCESS
     - "-DGNU_COMPILER"
+    - "-include portmacro.h"
     - "-includeFreeRTOSConfig_arch.h" #just a guess to put this first
     - "-include FreeRTOS.h"
     - '"${1}"'
@@ -191,6 +196,7 @@
     - "-D$": COLLECTION_DEFINES_TEST_AND_VENDOR
     - "-D$": DEFINES_TEST_PREPROCESS
     - "-DGNU_COMPILER"
+    - "-include portmacro.h"
     - "-includeFreeRTOSConfig_arch.h" #just a guess to put this first
     - "-include FreeRTOS.h"
     - -MT "${3}"
