@@ -8,7 +8,8 @@ Modified the esp-idf "hello world" example to demonstrate unit testing esp32 pro
 
 ## How to use example
 
-1. Open your test environment: `docker run -it --rm -v $PWD:/project throwtheswitch/madsciencelab`
+1. Open your test environment: `docker run -it --rm -v $PWD:/project throwtheswitch/madsciencelab` or use the one below to include the esp-idf volume too
+`docker run -it --rm -v $PWD:/project -v $PWD/../esp-idf:/esp-idf throwtheswitch/madsciencelab`
 2. test the edge component (no dependency on esp-idf): `ceedling test:hey_ceedling`
 You should get similar results:
 ~~~

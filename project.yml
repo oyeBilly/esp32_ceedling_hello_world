@@ -39,9 +39,7 @@
     - +:main/**
     - +:components/**
   :include:
-    - +:/esp/**
-    - +:/esp/newlib/platform_include/sys/reent.h
-    - +:/esp/esp_system/include/**
+    - +:/esp-idf/components/*/include
   :support:
     - test/support
   :libraries: []
