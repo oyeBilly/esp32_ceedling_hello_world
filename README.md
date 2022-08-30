@@ -45,7 +45,9 @@ So we need to add `sys/cdefs.h` and similar files for linux
 
 Also study the nvs_flash demo to figure out how they draw the line between hw dependency and mocks. Seems like they have hard coded mocks and stubs for a limited number of components
 
-So do we need a mock for esp_chip_info.h and esp_flash.h ?
+So do we need a mock for esp_chip_info.h and esp_flash.h ? No
+
+Took out the esp_flash.h and everything for esp_chip_info.h works. Need to include mock_esp_chip_info.h in test though
 
 
 
