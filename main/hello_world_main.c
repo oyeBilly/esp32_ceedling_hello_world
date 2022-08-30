@@ -4,6 +4,16 @@
  * SPDX-License-Identifier: CC0-1.0
  */
 
+#include <stdio.h>
+// #include "sdkconfig.h"
+// #include "freertos/FreeRTOS.h"
+// #include "freertos/task.h"
+#include "esp_chip_info.h"
+// #include "esp_flash.h"
+
+#include "hey_ceedling.h"
+
+
 #include "hello_world_main.h"
 
 void app_main(void)
