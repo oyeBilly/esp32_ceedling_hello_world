@@ -8,8 +8,7 @@ Modified the esp-idf "hello world" example to demonstrate unit testing esp32 pro
 
 ## How to use example
 
-1. Open your test environment: `docker run -it --rm -v $PWD:/project throwtheswitch/madsciencelab` or use the one below to include the esp-idf volume too
-`docker run -it --rm -v $PWD:/project -v $PWD/../esp-idf:/esp-idf throwtheswitch/madsciencelab`
+1. Open your test environment: `docker run -it --rm -v $PWD:/project throwtheswitch/madsciencelab` or use the one below to include the esp-idf volume too `docker run -it --rm -v $PWD:/project -v $PWD/../esp-idf:/esp-idf throwtheswitch/madsciencelab` or this one which has xtensa tools too `docker run -it --rm -v $PWD:/project -v $PWD/../esp-idf:/esp-idf -v $PWD/../../.espressif/tools/xtensa-esp32-elf/esp-2021r2-patch3-8.4.0/xtensa-esp32-elf/xtensa-esp32-elf:/xtensa_tools throwtheswitch/madsciencelab`
 2. test the edge component (no dependency on esp-idf): `ceedling test:hey_ceedling`
 You should get similar results:
 ~~~
@@ -35,26 +34,18 @@ IGNORED: 0
 ~~~
 
 3. Test the main function: `ceedling test`
-~~~
-Test 'test_hey_ceedling.c'
---------------------------
-Running test_hey_ceedling.out...
 
 
-Test 'test_hello_world_main.c'
-------------------------------
-Compiling hello_world_main.c...
-In file included from /esp/freertos/FreeRTOS-Kernel/include/freertos/FreeRTOS.h:79,
-                 from main/hello_world_main.c:9:
-/esp/newlib/platform_include/sys/reent.h:9:14: fatal error: sys/reent.h: No such file or directory
-    9 | #include_next<sys/reent.h>
-      |              ^~~~~~~~~~~~~
-compilation terminated.
-ERROR: Shell command failed.
-~~~
+# Step By Step Changes 
+1. Removed all the calls to freeRTOS and esp_ functions from main, all tests  worked
+2. Add back section to read chip info (esp_chip_info.h), need to include files from the xtensa tools (added as volume to docker) but actually we don't want the xtensa tools because that would mean building for the esp32 target! 
 
-**NOTICE in project.yml include section** that the file is explicitly included! On windows running wsl I get an error the arg is too big, I wonder if it is truncated on mac and that's why it appears missing?
-```
+So we need to add `sys/cdefs.h` and similar files for linux 
+... or can we mock it away? No, it generates warnings bc include file is in both test and source but doesn't resolve the error causing test build to fail
+
+Also study the nvs_flash demo to figure out how they draw the line between hw dependency and mocks. Seems like they have hard coded mocks and stubs for a limited number of components
+
+So do we need a mock for esp_chip_info.h and esp_flash.h ?
 
 
 
