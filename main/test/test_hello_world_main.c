@@ -7,7 +7,7 @@
 
 void test_app_main_should_callHeyCeedling(void)
 {
-    hey_ceedling_expect();
+    hey_ceedling_ExpectAndReturn(0);
 
     app_main();
 }
