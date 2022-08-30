@@ -1,6 +1,8 @@
 #include "unity.h"
 #include "cmock.h"
 
+#include "mock_esp_chip_info.h"
+// #include "mock_esp_flash.h"
 #include "mock_hey_ceedling.h"
 
 #include "hello_world_main.h"

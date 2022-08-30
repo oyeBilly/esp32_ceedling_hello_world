@@ -40,6 +40,10 @@
     - +:components/**
   :include:
     - +:/esp-idf/components/*/include
+    - +:build/config/ # add sdkconfig.h
+    # Do we want xtensa tools? but these replace things in gcc too...
+    # - +:/xtensa_tools/include/**
+    # - +:/xtensa_tools/sys-include/**
   :support:
     - test/support
   :libraries: []
