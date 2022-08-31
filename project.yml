@@ -4,6 +4,9 @@
 # Sample project C code is not presently written to produce a release artifact.
 # As such, release build options are disabled.
 # This sample, therefore, only demonstrates running a collection of unit tests.
+#
+# This project is meant to use ceedling for unit test builds 
+# and esp-idf can be run separately for target builds
 
 :project:
   :use_exceptions: FALSE
@@ -32,18 +35,16 @@
 :paths:
   :test:
     - +:test/**
-    - +:components/**
-    - +:main/**
+    - +:components/*/test/
+    - +:main/test/
     - -:test/support
   :source:
     - +:main/**
     - +:components/**
   :include:
+    # you could include individual esp-idf components or import a separate yml
     - +:/esp-idf/components/*/include
     - +:build/config/ # add sdkconfig.h
-    # Do we want xtensa tools? but these replace things in gcc too...
-    # - +:/xtensa_tools/include/**
-    # - +:/xtensa_tools/sys-include/**
   :support:
     - test/support
   :libraries: []
@@ -65,9 +66,13 @@
   :when_no_prototypes: :warn
   :enforce_strict_ordering: TRUE
   :plugins:
-    - :ignore
-    - :callback
     - :expect
+    - :ignore
+    #- :array
+    - :expect_any_args
+    #- :return_thru_ptr
+    - :ignore_arg
+    #- :callback
   :treat_as:
     uint8:    HEX8
     uint16:   HEX16

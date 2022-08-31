@@ -10,6 +10,8 @@
 void test_app_main_should_callHeyCeedling(void)
 {
     hey_ceedling_ExpectAndReturn(0);
-
+    // esp_chip_info_Ignore();
+    esp_chip_info_ExpectAnyArgs();
+    
     app_main();
 }

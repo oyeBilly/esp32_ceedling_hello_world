@@ -8,7 +8,7 @@ Modified the esp-idf "hello world" example to demonstrate unit testing esp32 pro
 
 ## How to use example
 
-1. Open your test environment: `docker run -it --rm -v $PWD:/project throwtheswitch/madsciencelab` or use the one below to include the esp-idf volume too `docker run -it --rm -v $PWD:/project -v $PWD/../esp-idf:/esp-idf throwtheswitch/madsciencelab` or this one which has xtensa tools too `docker run -it --rm -v $PWD:/project -v $PWD/../esp-idf:/esp-idf -v $PWD/../../.espressif/tools/xtensa-esp32-elf/esp-2021r2-patch3-8.4.0/xtensa-esp32-elf/xtensa-esp32-elf:/xtensa_tools throwtheswitch/madsciencelab`
+1. Open your test environment with a volume for your project and a volume for the esp-idf: `docker run -it --rm -v $PWD:/project -v $PWD/../esp-idf:/esp-idf throwtheswitch/madsciencelab`
 2. test the edge component (no dependency on esp-idf): `ceedling test:hey_ceedling`
 You should get similar results:
 ~~~
@@ -34,7 +34,40 @@ IGNORED: 0
 ~~~
 
 3. Test the main function: `ceedling test`
+~~~
+Test 'test_hey_ceedling.c'
+--------------------------
+Running test_hey_ceedling.out...
 
+
+Test 'test_hello_world_main.c'
+------------------------------
+/esp-idf/components/esp_hw_support/include/esp_chip_info.h:7:9: warning: #pragma once in main file
+    7 | #pragma once
+      |         ^~~~
+Generating runner for test_hello_world_main.c...
+Compiling test_hello_world_main_runner.c...
+Linking test_hello_world_main.out...
+Running test_hello_world_main.out...
+
+-----------
+TEST OUTPUT
+-----------
+[test_hey_ceedling.c]
+  - "hey ceedling"
+
+[test_hello_world_main.c]
+  - "Hello world!"
+  - "This is esp32 chip with 0 CPU core(s), WiFi/BT/BLE, "
+
+--------------------
+OVERALL TEST SUMMARY
+--------------------
+TESTED:  2
+PASSED:  2
+FAILED:  0
+IGNORED: 0
+~~~
 
 # Step By Step Changes 
 1. Removed all the calls to freeRTOS and esp_ functions from main, all tests  worked
