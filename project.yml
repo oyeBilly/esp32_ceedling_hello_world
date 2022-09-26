@@ -12,7 +12,6 @@
   :use_exceptions: FALSE
   :use_test_preprocessor: TRUE
   # :use_auxiliary_dependencies: TRUE
-
   :build_root: build_test
 #  :release_build: TRUE
   :test_file_prefix: test_
@@ -29,10 +28,6 @@
 #  :use_assembly: FALSE
 
 :environment:
-  - :IDF_PATH: /esp-idf
-
-:import:
-  - esp-idf-includes.yml
 
 :extension:
   :executable: .out
@@ -42,16 +37,14 @@
     - +:test/**
     - +:components/*/test/
     - +:main/test/
-
     - -:test/support
   :source:
-    - +:main/*
-    - +:components/*
+    - +:main/**
+    - +:components/**
   :include:
     # you could include individual esp-idf components or import a separate yml
     - +:/esp-idf/components/*/include
     - +:build/config/ # add sdkconfig.h
-
   :support:
     - test/support
   :libraries: []
@@ -69,27 +62,6 @@
     - TEST
 
 :cmock:
-  # copied from example https://github.com/ThrowTheSwitch/Ceedling/issues/579#issuecomment-1229347565
-  :verbosity: 3
-  :includes_h_pre_orig_header:
-    - portmacro.h
-    - FreeRTOSConfig_arch.h #just a guess to put this first
-    - FreeRTOS.h
-  :includes:
-    - portmacro.h
-    - FreeRTOSConfig_arch.h #just a guess to put this first
-    - FreeRTOS.h
-  :strippables:
-    - '(?:__attribute__\s*\(+.*?\)+)'
-      # following functions are disabled by configQUEUE_REGISTRY_SIZE
-    - '(?:vQueueAddToRegistry\s*\([\s\w\*_,]*\))'
-    - '(?:vQueueUnregisterQueue\s*\([\s\w\*_,]*\))'
-    - '(?:pcQueueGetName\s*\([\s\w\*_,]*\))'
-      # following function is disabled by configTHREAD_LOCAL_STORAGE_DELETE_CALLBACKS
-    - '(?:vTaskSetThreadLocalStoragePointerAndDelCallback\s*\([\s\w\*_,]*\))'
-    - PRIVILEGED_FUNCTION
-    - portDONT_DISCARD
-  # end copy from example
   :mock_prefix: mock_
   :when_no_prototypes: :warn
   :enforce_strict_ordering: TRUE
@@ -101,15 +73,12 @@
     #- :return_thru_ptr
     - :ignore_arg
     #- :callback
-
   :treat_as:
     uint8:    HEX8
     uint16:   HEX16
     uint32:   UINT32
     int8:     INT8
     bool:     UINT8
-  :defines:
-    - CMOCK_MEM_DYNAMIC
 
 # Add -gcov to the plugins list to make sure of the gcov plugin
 # You will need to have gcov and gcovr both installed to make it work.
@@ -125,94 +94,6 @@
 # Ceedling defaults to using gcc for compiling, linking, etc.
 # As [:tools] is blank, gcc will be used (so long as it's in your system path)
 # See documentation to configure a given toolchain for use
-
-# copy from example https://github.com/ThrowTheSwitch/Ceedling/issues/579#issuecomment-1229347565
-:tools:
-  :test_file_preprocessor:
-    :executable: gcc
-    :name: default_test_file_preprocessor
-    :stderr_redirect: :none
-    :background_exec: :none
-    :optional: false
-    :arguments:
-    - ''
-    - ''
-    - "-E"
-    - -I"$": COLLECTION_PATHS_TEST_SUPPORT_SOURCE_INCLUDE_VENDOR
-    - -I"$": COLLECTION_PATHS_TEST_TOOLCHAIN_INCLUDE
-    - "-D$": COLLECTION_DEFINES_TEST_AND_VENDOR
-    - "-D$": DEFINES_TEST_PREPROCESS
-    - "-DGNU_COMPILER"
-    - "-include portmacro.h"
-    - "-includeFreeRTOSConfig_arch.h" #just a guess to put this first
-    - "-include FreeRTOS.h"
-    - '"${1}"'
-    - -o "${2}"
-  :test_file_preprocessor_directives:
-    :executable: gcc
-    :name: default_test_file_preprocessor_directives
-    :stderr_redirect: :none
-    :background_exec: :none
-    :optional: false
-    :arguments:
-    - "-E"
-    - -I"$": COLLECTION_PATHS_TEST_SUPPORT_SOURCE_INCLUDE_VENDOR
-    - -I"$": COLLECTION_PATHS_TEST_TOOLCHAIN_INCLUDE
-    - "-D$": COLLECTION_DEFINES_TEST_AND_VENDOR
-    - "-D$": DEFINES_TEST_PREPROCESS
-    - "-DGNU_COMPILER"
-    - "-include portmacro.h"
-    - "-includeFreeRTOSConfig_arch.h" #just a guess to put this first
-    - "-include FreeRTOS.h"
-    - "-fdirectives-only"
-    - '"${1}"'
-    - -o "${2}"
-  :test_includes_preprocessor:
-    :executable: gcc
-    :name: default_test_includes_preprocessor
-    :stderr_redirect: :none
-    :background_exec: :none
-    :optional: false
-    :arguments:
-    - ''
-    - ''
-    - "-E"
-    - "-MM"
-    - "-MG"
-    - -I"$": COLLECTION_PATHS_TEST_SUPPORT_SOURCE_INCLUDE_VENDOR
-    - -I"$": COLLECTION_PATHS_TEST_TOOLCHAIN_INCLUDE
-    - "-D$": COLLECTION_DEFINES_TEST_AND_VENDOR
-    - "-D$": DEFINES_TEST_PREPROCESS
-    - "-DGNU_COMPILER"
-    - "-include portmacro.h"
-    - "-includeFreeRTOSConfig_arch.h" #just a guess to put this first
-    - "-include FreeRTOS.h"
-    - '"${1}"'
-  :test_dependencies_generator:
-    :executable: gcc
-    :name: default_test_dependencies_generator
-    :stderr_redirect: :none
-    :background_exec: :none
-    :optional: false
-    :arguments:
-    - ''
-    - ''
-    - "-E"
-    - -I"$": COLLECTION_PATHS_TEST_SUPPORT_SOURCE_INCLUDE_VENDOR
-    - -I"$": COLLECTION_PATHS_TEST_TOOLCHAIN_INCLUDE
-    - "-D$": COLLECTION_DEFINES_TEST_AND_VENDOR
-    - "-D$": DEFINES_TEST_PREPROCESS
-    - "-DGNU_COMPILER"
-    - "-include portmacro.h"
-    - "-includeFreeRTOSConfig_arch.h" #just a guess to put this first
-    - "-include FreeRTOS.h"
-    - -MT "${3}"
-    - "-MM"
-    - "-MD"
-    - "-MG"
-    - -MF "${2}"
-    - -c "${1}"
-# end copy from example
 
 # LIBRARIES
 # These libraries are automatically injected into the build process. Those specified as
@@ -232,5 +113,4 @@
   :enabled:
     - stdout_pretty_tests_report
     - module_generator
-
-
+...
