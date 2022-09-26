@@ -2,6 +2,8 @@
 
 Modified the esp-idf "hello world" example to demonstrate unit testing esp32 projects on a host machine using ceedling to build and run unit tests. Target builds for the esp32 are done separately with the ESP-IDF toolchain.
 
+Parts of hello world are still commented out. I could try getting freeRTOS includes to work OR I could just add the needed fuctions to a stub in test/support again. I'm too lazy to do either one right now but I think this repo effectively demonstrates adding new code to esp-idf projects and testing alongside existing esp-idf code. These esp-idf examples aren't really written to be good modular unit-testable code though, definitely read up on some TDD tutorials for how to do that.
+
 ## Pre Reqs
 1. ESP-IDF (https://github.com/espressif/esp-idf)
 2. Throw The Switch's docker image: `docker pull throwtheswitch/madsciencelab`
@@ -71,7 +73,10 @@ IGNORED: 0
 # Troubleshooting
 If your ceedling build doesn't work as above try running `ceedling clobber` first. This is needed if you add new plugins to your yaml file (e.g. adding expect_any_args to cmock)
 
-# Step By Step Changes 
+useful tutorials: http://www.electronvector.com/blog/add-unit-tests-to-your-current-project-with-ceedling
+Tips for mocking freeRTOS functions: https://github.com/ThrowTheSwitch/Ceedling/issues/579#issuecomment-1146343363
+
+# Tracking things I tried to get this working
 1. Removed all the calls to freeRTOS and esp_ functions from main, all tests  worked
 2. Add back section to read chip info (esp_chip_info.h), need to include files from the xtensa tools (added as volume to docker) but actually we don't want the xtensa tools because that would mean building for the esp32 target! 
 
@@ -85,5 +90,7 @@ If your ceedling build doesn't work as above try running `ceedling clobber` firs
 6. Took out the esp_flash.h and everything for esp_chip_info.h works. Need to include mock_esp_chip_info.h in test though
 
 7. Trying to add back esp_flash.h support. esp_flash.h has too many dependencies. Rather than refactor part of the esp_idf though we can just make a stub in /test/support with only the functions we care about.
+
+8. Parts of hello world are still commented out. I could try getting freeRTOS includes to work OR I could just add the needed fuctions to a stub in test/support again. I'm too lazy to do either one right now but I think this repo effectively demonstrates adding new code to esp-idf projects and testing alongside existing esp-idf code. These esp-idf examples aren't really written to be good modular unit-testable code though, definitely read up on some TDD tutorials for how to do that.
 
 
