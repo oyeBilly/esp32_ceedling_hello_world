@@ -68,20 +68,22 @@ PASSED:  2
 FAILED:  0
 IGNORED: 0
 ~~~
+# Troubleshooting
+If your ceedling build doesn't work as above try running `ceedling clobber` first. This is needed if you add new plugins to your yaml file (e.g. adding expect_any_args to cmock)
 
 # Step By Step Changes 
 1. Removed all the calls to freeRTOS and esp_ functions from main, all tests  worked
 2. Add back section to read chip info (esp_chip_info.h), need to include files from the xtensa tools (added as volume to docker) but actually we don't want the xtensa tools because that would mean building for the esp32 target! 
 
-So we need to add `sys/cdefs.h` and similar files for linux 
+3. So we need to add `sys/cdefs.h` and similar files for linux 
 ... or can we mock it away? No, it generates warnings bc include file is in both test and source but doesn't resolve the error causing test build to fail
 
-Also study the nvs_flash demo to figure out how they draw the line between hw dependency and mocks. Seems like they have hard coded mocks and stubs for a limited number of components
+4. Also study the nvs_flash demo to figure out how they draw the line between hw dependency and mocks. Seems like they have hard coded mocks and stubs for a limited number of components
 
-So do we need a mock for esp_chip_info.h and esp_flash.h ? No
+5. So do we need a mock for esp_chip_info.h and esp_flash.h ? No
 
-Took out the esp_flash.h and everything for esp_chip_info.h works. Need to include mock_esp_chip_info.h in test though
+6. Took out the esp_flash.h and everything for esp_chip_info.h works. Need to include mock_esp_chip_info.h in test though
 
-
+7. Trying to add back esp_flash.h support. esp_flash.h has too many dependencies. Rather than refactor part of the esp_idf though we can just make a stub in /test/support with only the functions we care about.
 
 

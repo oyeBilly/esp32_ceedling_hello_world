@@ -9,7 +9,7 @@
 // #include "freertos/FreeRTOS.h"
 // #include "freertos/task.h"
 #include "esp_chip_info.h"
-// #include "esp_flash.h"
+#include "esp_flash.h"
 
 #include "hey_ceedling.h"
 
@@ -31,14 +31,14 @@ void app_main(void)
            (chip_info.features & CHIP_FEATURE_BT) ? "/BT" : "",
            (chip_info.features & CHIP_FEATURE_BLE) ? "/BLE" : "");
 
-    // printf("silicon revision %d, ", chip_info.revision);
-    // if(esp_flash_get_size(NULL, &flash_size) != ESP_OK) {
-    //     printf("Get flash size failed");
-    //     return;
-    // }
+    printf("silicon revision %d, ", chip_info.revision);
+    if(esp_flash_get_size(NULL, &flash_size) != ESP_OK) {
+        printf("Get flash size failed");
+        return;
+    }
 
-    // printf("%uMB %s flash\n", flash_size / (1024 * 1024),
-    //        (chip_info.features & CHIP_FEATURE_EMB_FLASH) ? "embedded" : "external");
+    printf("%uMB %s flash\n", flash_size / (1024 * 1024),
+           (chip_info.features & CHIP_FEATURE_EMB_FLASH) ? "embedded" : "external");
 
     // printf("Minimum free heap size: %d bytes\n", esp_get_minimum_free_heap_size());
 
